@@ -1,0 +1,25 @@
+# Environnement Python
+venv/
+env/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Variables d'environnement 
+.env
+
+# Données (le dataset est volumineux et téléchargeable via Kaggle,
+# on ne versionne pas les CSV bruts ni les exports)
+data/
+*.csv
+
+olist_analyse_modelisation.ipynb
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
