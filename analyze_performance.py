@@ -83,7 +83,7 @@ explication_avant = db.command(
 )
 stats_avant = explication_avant["executionStats"]
 
-print("--- AVANT (sans index) — on attend un COLLSCAN ---")
+print("--- AVANT (sans index)  on attend un COLLSCAN ---")
 print(
     "Stage du plan d'exécution :",
     explication_avant["queryPlanner"]["winningPlan"]["stage"],

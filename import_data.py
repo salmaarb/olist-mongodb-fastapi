@@ -136,10 +136,7 @@ print(f"-> {len(liste_vendeurs)} vendeurs importés.\n")
 
 
 # 7. COLLECTION "customers"
-# Piège du dataset Olist : "customer_id" est généré une fois PAR COMMANDE,
-# pas une fois par personne. La vraie personne est identifiée par
-# "customer_unique_id". On regroupe donc les lignes par cet identifiant,
-# et on compte le nombre de commandes de chaque personne au passage.
+
 
 print("Construction de la collection 'customers'...")
 
@@ -176,9 +173,7 @@ print(f"-> {len(liste_clients)} clients importés.\n")
 #   - la liste de ses articles
 #   - la liste de ses paiements
 #   - son avis (s'il y en a un)
-# C'est ce qu'on appelle "l'embedding" : tout est regroupé au même endroit,
-# pour éviter d'avoir à faire plusieurs requêtes quand on veut voir une
-# commande en détail.
+
 
 print("Construction de la collection 'orders' (ça prend quelques minutes)...")
 

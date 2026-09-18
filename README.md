@@ -14,7 +14,6 @@ Projet Data Engineering : modélisation, import et exposition via API REST des d
 - [Nettoyage des données](#nettoyage-des-données)
 - [Tester l'API](#tester-lapi)
 - [Structure du dépôt](#structure-du-dépôt)
-- [Auteurs](#auteurs)
 
 ---
 
@@ -45,10 +44,10 @@ La structure relationnelle d'origine (9 fichiers CSV) n'a **pas** été reprodui
 
 | Collection | Contenu | Décision |
 |---|---|---|
-| `orders` | Commande + **items[] embarqués** + **payments[] embarqués** + **review embarquée** | Embedding : listes petites et bornées (1 à 12 articles, 1 à 29 paiements), review quasi toujours unique — et toujours consultés avec la commande |
+| `orders` | Commande + **items[] embarqués** + **payments[] embarqués** + **review embarquée** | Embedding : listes petites et bornées (1 à 12 articles, 1 à 29 paiements), review quasi toujours unique  et toujours consultés avec la commande |
 | `products` | Catalogue produit | Référencé (`product_id`) : un produit est réutilisé dans ~3,4 commandes en moyenne, l'embarquer le dupliquerait partout |
 | `sellers` | Catalogue vendeurs | Référencé (`seller_id`) : réutilisé dans ~36 commandes en moyenne |
-| `customers` | Une entrée par **personne réelle** (`customer_unique_id`), avec compteur de commandes | `customer_id` est généré une fois par commande dans Olist — il ne suffit pas pour repérer un client fidèle |
+| `customers` | Une entrée par **personne réelle** (`customer_unique_id`), avec compteur de commandes | `customer_id` est généré une fois par commande dans Olist  il ne suffit pas pour repérer un client fidèle |
 
 Exemple de document `orders` :
 
@@ -98,7 +97,7 @@ python import_data_simple.py
 Le script :
 - lit les 8 fichiers CSV utilisés (customers, orders, order_items, order_payments, order_reviews, products, sellers, product_category_name_translation) ;
 - construit les 4 collections (`orders`, `products`, `sellers`, `customers`) ;
-- **vide puis reconstruit** chaque collection à chaque exécution (`delete_many` + `insert_many`) — relancer le script donne toujours un résultat propre, sans jamais dupliquer de données ;
+- **vide puis reconstruit** chaque collection à chaque exécution (`delete_many` + `insert_many`)  relancer le script donne toujours un résultat propre, sans jamais dupliquer de données ;
 - crée les index nécessaires (voir section performance).
 
 Ça prend quelques minutes (le script est volontairement écrit de façon simple et lisible plutôt qu'optimisé pour la vitesse).
@@ -129,8 +128,8 @@ uvicorn main:app --reload
 | GET | `/sellers` | Liste paginée, filtrable par `city` |
 | GET | `/customers/{customer_unique_id}` | Fiche client (personne réelle) |
 | GET | `/customers` | Liste paginée, filtrable par `min_orders` (clients fidèles) |
-| GET | `/stats/revenue-by-state` | **Agrégation** — chiffre d'affaires total par état |
-| GET | `/stats/reviews-by-category` | **Agrégation** — note moyenne des avis par catégorie de produit (`$lookup` orders ↔ products) |
+| GET | `/stats/revenue-by-state` | **Agrégation**  chiffre d'affaires total par état |
+| GET | `/stats/reviews-by-category` | **Agrégation**  note moyenne des avis par catégorie de produit (`$lookup` orders ↔ products) |
 
 Toutes les listes sont **paginées** (`skip`, `limit`, `limit` plafonné à 100) pour éviter des réponses trop volumineuses. Un paramètre invalide (ex: `limit=500`) renvoie un `422`. Une ressource introuvable renvoie un `404` explicite.
 
@@ -138,7 +137,7 @@ Toutes les listes sont **paginées** (`skip`, `limit`, `limit` plafonné à 100)
 
 ## Performance : index et explain()
 
-**Requête analysée :** `db.orders.find({"items.product_id": "<id>"})` — retrouver toutes les commandes contenant un produit donné (usage réel : suivi des ventes d'un produit pour un vendeur).
+**Requête analysée :** `db.orders.find({"items.product_id": "<id>"})`  retrouver toutes les commandes contenant un produit donné (usage réel : suivi des ventes d'un produit pour un vendeur).
 
 Cette requête est très sélective : un produit n'apparaît en moyenne que dans ~3,4 commandes sur 99 441, ce qui en fait un bon candidat pour démontrer l'intérêt d'un index.
 
@@ -200,8 +199,8 @@ Le script vérifie, entre autres :
 .
 ├── main.py                              # API FastAPI (un seul fichier)
 ├── tester_api.py                        # tests manuels de l'API (sans pytest)
-├── import_data_simple.py                # import CSV -> MongoDB
-├── analyze_performance_simple.py        # analyse explain() avant/après index
+├── import_data.py                # import CSV -> MongoDB
+├── analyze_performance.py        # analyse explain() avant/après index
 ├── analyse_donnees_et_modelisation.md    # analyse des données + justification du modèle
 ├── nettoyage_donnees.md                 # incohérences trouvées et règles de nettoyage appliquées
 ├── olist_analyse_modelisation.ipynb      # notebook reproduisant l'analyse
@@ -210,10 +209,3 @@ Le script vérifie, entre autres :
 ```
 
 ---
-
-## Auteurs
-
-- [Nom Prénom 1] — [rôle / partie principale du projet]
-- [Nom Prénom 2] — [rôle / partie principale du projet]
-
-*(à compléter — le brief demande des contributions identifiables des deux membres du binôme dans l'historique Git)*
